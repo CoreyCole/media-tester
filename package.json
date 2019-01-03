@@ -1,0 +1,32 @@
+{
+    "name": "codelab-typescript",
+    "description": "Actions on Google Codelab Level 3 in Typescript",
+    "author": "Google Inc",
+    "private": true,
+    "scripts": {
+        "start": "nodemon -e ts -x ts-node src/init.dev.ts",
+        "compile": "serverless webpack --out dist",
+        "zip": "npm run compile && cd dist/service && zip -X -r index.zip *",
+        "deploy": "npm run zip && aws --region us-west-2 lambda update-function-code --function-name halloo-corey-google --zip-file fileb://dist/service/index.zip"
+    },
+    "dependencies": {
+        "actions-on-google": "2.5.0",
+        "colors": "1.3.2"
+    },
+    "devDependencies": {
+        "@types/actions-on-google": "1.10.2",
+        "@types/aws-lambda": "8.10.15",
+        "@types/node": "10.12.11",
+        "actions-on-google-testing": "0.2.4",
+        "bespoken-tools": "2.1.2",
+        "nodemon": "1.18.7",
+        "serverless-plugin-bespoken": "0.1.3",
+        "serverless-webpack": "5.2.0",
+        "ts-loader": "5.3.1",
+        "tslint": "5.11.0",
+        "typescript": "2.8.3",
+        "webpack": "4.26.1",
+        "webpack-cli": "3.1.2",
+        "webpack-node-externals": "1.7.2"
+    }
+}
