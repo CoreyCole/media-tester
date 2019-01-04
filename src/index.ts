@@ -68,6 +68,10 @@ app.intent('LaunchRequestAsync', (conv): Promise<DialogflowConversation<{}, {}, 
 
 app.intent('MediaStatus', (conv): Promise<DialogflowConversation<{}, {}, Contexts>> => {
     console.log('[MediaStatus]');
+    const mediaStatus = conv.arguments.get('MEDIA_STATUS');
+    if (!mediaStatus || mediaStatus.status !== 'FINISHED') {
+        return Promise.resolve(conv);
+    }
     const conv$: Observable<DialogflowConversation<{}, {}, Contexts>> = of('test').pipe(
         map(() => {
             conv.ask(`<speak><audio src="${shortAudio}" /></speak>`);
