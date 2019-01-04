@@ -72,7 +72,7 @@ app.intent('MediaStatus', (conv) => {
     if (!mediaStatus || mediaStatus.status !== 'FINISHED') {
         return Promise.resolve(conv);
     }
-    conv.ask(`<speak><audio src="${shortAudio}" /></speak>`);
+    conv.ask(`<speak><audio src="${shortAudio}"><desc>Silent while waiting for messages...</desc></audio></speak>`);
     conv.ask(new MediaObject({
         name: 'short audio loop',
         description: 'testing auto play',
