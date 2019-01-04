@@ -66,29 +66,24 @@ app.intent('LaunchRequestAsync', (conv): Promise<DialogflowConversation<{}, {}, 
     return conv$.toPromise();
 });
 
-app.intent('MediaStatus', (conv): Promise<DialogflowConversation<{}, {}, Contexts>> => {
+app.intent('MediaStatus', (conv) => {
     console.log('[MediaStatus]');
     const mediaStatus = conv.arguments.get('MEDIA_STATUS');
     if (!mediaStatus || mediaStatus.status !== 'FINISHED') {
         return Promise.resolve(conv);
     }
-    const conv$: Observable<DialogflowConversation<{}, {}, Contexts>> = of('test').pipe(
-        map(() => {
-            conv.ask(`<speak><audio src="${shortAudio}" /></speak>`);
-            conv.ask(new MediaObject({
-                name: 'short audio loop',
-                description: 'testing auto play',
-                url: shortAudio,
-                icon: new Image({
-                    url: 'https://s3-us-west-2.amazonaws.com/www.heymuse.com/images/hey-muse-large.png',
-                    alt: 'Logo',
-                })
-            }));
-            conv.ask(new Suggestions('cancel'));
-            return conv;
+    conv.ask(`<speak><audio src="${shortAudio}" /></speak>`);
+    conv.ask(new MediaObject({
+        name: 'short audio loop',
+        description: 'testing auto play',
+        url: shortAudio,
+        icon: new Image({
+            url: 'https://s3-us-west-2.amazonaws.com/www.heymuse.com/images/hey-muse-large.png',
+            alt: 'Logo',
         })
-    );
-    return conv$.toPromise();
+    }));
+    conv.ask(new Suggestions('cancel'));
+    return conv;
 });
 
 app.intent('CancelIntent', (conv) => {
