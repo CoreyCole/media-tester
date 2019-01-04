@@ -16,14 +16,18 @@
 import {
     dialogflow,
     MediaObject,
-    Suggestions
+    Suggestions,
+    DialogflowConversation,
+    Contexts
 } from 'actions-on-google';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 // Instantiate the Dialogflow client.
 const app = dialogflow({ debug: true });
 
 // Handle the Dialogflow intent named 'Default Welcome Intent'.
-app.intent('LaunchRequest', (conv) => {
+app.intent('LaunchRequest', (conv): DialogflowConversation<{}, {}, Contexts> => {
     console.log('[LaunchRequest]');
     conv.ask(`Welcome! Starting the audio loop...`);
     conv.ask(new MediaObject({
@@ -32,17 +36,41 @@ app.intent('LaunchRequest', (conv) => {
         url: 'https://s3-us-west-2.amazonaws.com/hallooinc/audio/harmony-silent-file_v2.mp3'
     }));
     conv.ask(new Suggestions('cancel'));
+    return conv;
 });
 
-app.intent('MediaStatus', (conv) => {
+app.intent('LaunchRequestAsync', (conv): Promise<DialogflowConversation<{}, {}, Contexts>> => {
+    console.log('[LaunchRequestAsync]');
+    const conv$: Observable<DialogflowConversation<{}, {}, Contexts>> = of('test').pipe(
+        map(() => {
+            conv.ask(`Welcome async! Starting the audio loop...`);
+            conv.ask(new MediaObject({
+                name: 'piano file loop',
+                description: 'testing auto play',
+                url: 'https://s3-us-west-2.amazonaws.com/hallooinc/audio/harmony-silent-file_v2.mp3'
+            }));
+            conv.ask(new Suggestions('cancel'));
+            return conv;
+        })
+    );
+    return conv$.toPromise();
+});
+
+app.intent('MediaStatus', (conv): Promise<DialogflowConversation<{}, {}, Contexts>> => {
     console.log('[MediaStatus]');
-    conv.ask(`Continue the audio loop...`);
-    conv.ask(new MediaObject({
-        name: 'piano file loop',
-        description: 'testing auto play',
-        url: 'https://s3-us-west-2.amazonaws.com/hallooinc/audio/harmony-silent-file_v2.mp3'
-    }));
-    conv.ask(new Suggestions('cancel'));
+    const conv$: Observable<DialogflowConversation<{}, {}, Contexts>> = of('test').pipe(
+        map(() => {
+            conv.ask(`Continue the audio loop...`);
+            conv.ask(new MediaObject({
+                name: 'piano file loop',
+                description: 'testing auto play',
+                url: 'https://s3-us-west-2.amazonaws.com/hallooinc/audio/harmony-silent-file_v2.mp3'
+            }));
+            conv.ask(new Suggestions('cancel'));
+            return conv;
+        })
+    );
+    return conv$.toPromise();
 });
 
 app.intent('CancelIntent', (conv) => {
