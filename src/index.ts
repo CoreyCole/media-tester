@@ -27,7 +27,7 @@ import { map } from 'rxjs/operators';
 const app = dialogflow({ debug: true });
 
 // Handle the Dialogflow intent named 'Default Welcome Intent'.
-app.intent('LaunchRequest', (conv): DialogflowConversation<{}, {}, Contexts> => {
+app.intent('LaunchRequest', (conv): void => {
     console.log('[LaunchRequest]');
     conv.ask(`Welcome! Starting the audio loop...`);
     conv.ask(new MediaObject({
@@ -36,7 +36,6 @@ app.intent('LaunchRequest', (conv): DialogflowConversation<{}, {}, Contexts> => 
         url: 'https://s3-us-west-2.amazonaws.com/hallooinc/audio/harmony-silent-file_v2.mp3'
     }));
     conv.ask(new Suggestions('cancel'));
-    return conv;
 });
 
 app.intent('LaunchRequestAsync', (conv): Promise<DialogflowConversation<{}, {}, Contexts>> => {
